@@ -5,6 +5,7 @@ import numpy as np
 from functools import reduce
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import helpers as hp
 
 
 n = 10
@@ -84,29 +85,15 @@ for iteration in range(200000):
 
     if iteration % 100 == 0:
         print(str(iteration) + ' Kolejna wartość P' + str(P))
-    #     fig = plt.figure()
-    #     ax = fig.add_subplot(111, projection='3d')
-    #     xs = np.array(A).T[0]
-    #     ys = np.array(A).T[1]
-    #     zs = np.array(A).T[2]
-    #     ax.scatter(xs=xs, ys=ys, zs=zs, s=5)
-    #     ax.scatter(xs=centroid[0], ys=centroid[1], zs=centroid[2], label='G', s=40)
-    #     ax.scatter(xs=R_n_plus_1[0], ys=R_n_plus_1[1], zs=R_n_plus_1[2], label='R n+1', s=40)
-    #     ax.scatter(xs=P[0], ys=P[1], zs=P[2], label='P', s=40)
-    #     ax.set_xlim(-80, 80)
-    #     ax.set_ylim(-80, 80)
-    #     ax.set_zlim(0, 20)
-    #     plt.legend()
-    #
-    #     if iteration//100 < 10:
-    #         f_name = 'results/CRS2_00{}'.format(iteration//100)
-    #     elif iteration//100 < 100:
-    #         f_name = 'results/CRS2_0{}'.format(iteration//100)
-    #     else:
-    #         f_name = 'results/CRS2_{}'.format(iteration//100)
-    #
-    #     plt.savefig(f_name)
-    #     plt.close()
+
+        if iteration//100 < 10:
+            f_name = 'results/CRS2_00{}'.format(iteration//100)
+        elif iteration//100 < 100:
+            f_name = 'results/CRS2_0{}'.format(iteration//100)
+        else:
+            f_name = 'results/CRS2_{}'.format(iteration//100)
+
+        hp.plot_3d_scatter(whole_set=A, centroid=centroid, r_last=R_n_plus_1, optimum=P, f_name=f_name)
 
 end = time.time()
 plt.plot(WYNIK)
