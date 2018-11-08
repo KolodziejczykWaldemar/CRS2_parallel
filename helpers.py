@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 
@@ -20,3 +19,10 @@ def plot_3d_scatter(whole_set, centroid, r_last, optimum, f_name):
     plt.savefig(f_name)
     plt.close()
 
+
+def plot_convergence(x):
+    plt.plot(x)
+    plt.title('Convergence over iterations')
+    plt.xlabel('Iteration')
+    plt.ylabel('Estimation of the minimal value')
+    plt.show()

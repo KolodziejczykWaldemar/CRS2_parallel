@@ -1,38 +1,20 @@
 import random as rn
-import math as mt
 import time
 import numpy as np
-from functools import reduce
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import helpers as hp
+import functions as f
 
 
 n = 10
-low = -40
-high = 40
+lower_bound = -40
+upper_bound = 40
 rn.seed(1)
 N = 800
 
 
-def function_1(x):
-    sum_x = sum([arg**2 for arg in x])
-    multi = mt.cos(x[0])
-    for i in range(len(x)-1):
-        multi *= mt.cos(x[i+1]/(i+2))
-    return sum_x/40 + 1 - multi
-
-
-def function_2(x):
-    sum_x = 0
-    for i in range(len(x)-1):
-        sum_x += (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-    return sum_x
-
-
 def get_point():
-    x = [rn.random()*2*high+low for i in range(n)]
-    y = function_1(x)
+    x = [rn.random()*2*upper_bound+lower_bound for i in range(n)]
+    y = f.function_1(x)
     x.append(y)
     return x
 
@@ -48,18 +30,18 @@ def get_P(centroid, R_n_plus_1):
 
 def is_P_in_V(P):
     for x in P[:-1]:
-        if x > high or x < low:
+        if x > upper_bound or x < lower_bound:
             return False
     return True
 
 
 start = time.time()
 
-WYNIK = list()
+final_result = list()
 
 A = [get_point() for i in range(N)]
 
-for iteration in range(200000):
+for iteration in range(20000):
 
     i_M = np.argmax(np.array(A).T[-1])
     i_L = np.argmin(np.array(A).T[-1])
@@ -81,7 +63,7 @@ for iteration in range(200000):
         if P[-1] < M[-1]:
             M = P
             A[i_M] = P
-            WYNIK.append(P[-1])
+            final_result.append(P[-1])
 
     if iteration % 100 == 0:
         print(str(iteration) + ' Kolejna wartość P' + str(P))
@@ -95,14 +77,12 @@ for iteration in range(200000):
 
         hp.plot_3d_scatter(whole_set=A, centroid=centroid, r_last=R_n_plus_1, optimum=P, f_name=f_name)
 
-end = time.time()
-plt.plot(WYNIK)
-plt.show()
+hp.plot_convergence(final_result)
 
 print('M: '+str(M))
 print('L: '+str(L))
 print('centroid: '+str(centroid))
 print('P: '+str(P))
-print(str(end-start)+' s')
+print(str(time.time()-start)+' s')
 
 
