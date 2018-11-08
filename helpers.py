@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def plot_3d_scatter(whole_set, centroid, r_last, optimum, f_name):

@@ -4,19 +4,11 @@ import numpy as np
 import helpers as hp
 import functions as f
 
+FUNCTION_NUMBER = 2
 
-n = 10
-lower_bound = -40
-upper_bound = 40
 rn.seed(1)
 N = 800
-
-
-def get_point():
-    x = [rn.random()*2*upper_bound+lower_bound for i in range(n)]
-    y = f.function_1(x)
-    x.append(y)
-    return x
+iterations = 20000
 
 
 def get_centroid(x):
@@ -28,20 +20,13 @@ def get_P(centroid, R_n_plus_1):
     return [doubled_G[i] - R_n_plus_1[i] for i in range(len(centroid))]
 
 
-def is_P_in_V(P):
-    for x in P[:-1]:
-        if x > upper_bound or x < lower_bound:
-            return False
-    return True
-
-
 start = time.time()
 
 final_result = list()
 
-A = [get_point() for i in range(N)]
+A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '()')
 
-for iteration in range(20000):
+for iteration in range(iterations):
 
     i_M = np.argmax(np.array(A).T[-1])
     i_L = np.argmin(np.array(A).T[-1])
@@ -51,14 +36,14 @@ for iteration in range(20000):
     A_exclude_L = A.copy()
     A_exclude_L.remove(L)
 
-    R_chosen = rn.sample(A_exclude_L, n)
+    R_chosen = rn.sample(A_exclude_L, f.n)
     R_n_plus_1 = R_chosen.pop()
     centroid = get_centroid(R_chosen)
     P = get_P(centroid, R_n_plus_1)
 
-    if is_P_in_V(P):
+    if f.is_point_in_domain(P):
 
-        P[-1] = function_1(P[:-1])
+        P[-1] = eval('f.function_' + str(FUNCTION_NUMBER) + '(P[:-1])')
 
         if P[-1] < M[-1]:
             M = P
