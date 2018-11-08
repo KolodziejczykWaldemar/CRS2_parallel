@@ -60,7 +60,12 @@ for iteration in range(iterations):
         else:
             f_name = 'results/CRS2_{}'.format(iteration//100)
 
-        hp.plot_3d_scatter(whole_set=A, centroid=centroid, r_last=R_n_plus_1, optimum=P, f_name=f_name)
+        hp.plot_3d_scatter(whole_set=A,
+                           centroid=centroid,
+                           r_last=R_n_plus_1,
+                           optimum=P,
+                           f_name=f_name,
+                           func_number=FUNCTION_NUMBER)
 
 hp.plot_convergence(final_result)
 

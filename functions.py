@@ -47,7 +47,9 @@ def generate_points_func_2():
     while len(A) != N:
         x = _get_point_func_2()
         if _func_2_condition(x):
+            print(x)
             A.append(x)
+    return A
 
 
 def _get_point_func_2():
