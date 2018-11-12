@@ -8,7 +8,7 @@ FUNCTION_NUMBER = 2
 
 rn.seed(1)
 N = 800
-iterations = 20000
+iterations = 2000
 
 
 def get_centroid(x):
