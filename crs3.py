@@ -47,7 +47,7 @@ for iteration in range(iterations):
     R_chosen = rn.sample(A_exclude_W, f.n)
 
     i_S = np.argmax(np.array(A_exclude_W).T[-1])
-    S = A[i_S]
+    S = A_exclude_W[i_S]
 
     centroid = get_G(R_chosen)
 
