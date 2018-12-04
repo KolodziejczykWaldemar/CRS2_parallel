@@ -30,11 +30,11 @@ def get_R(centroid, w):
     return [4*centroid[i] - 3*w[i] for i in range(len(centroid))]
 
 
-start = time.time()
-
 final_result = list()
 
-A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '()')
+A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
+
+start = time.time()
 
 for iteration in range(iterations):
 
@@ -86,23 +86,23 @@ for iteration in range(iterations):
             else:
                 continue
 
-    if iteration % 100 == 0:
-        print(str(iteration) + ' Kolejna wartość P' + str(P))
-
-        if iteration//100 < 10:
-            f_name = 'results/CRS2_00{}'.format(iteration//100)
-        elif iteration//100 < 100:
-            f_name = 'results/CRS2_0{}'.format(iteration//100)
-        else:
-            f_name = 'results/CRS2_{}'.format(iteration//100)
-
-        hp.plot_3d_scatter(whole_set=A,
-                           centroid=centroid,
-                           r_last=W,
-                           optimum=P,
-                           f_name=f_name,
-                           func_number=FUNCTION_NUMBER)
-
-hp.plot_convergence(final_result)
+#     if iteration % 100 == 0:
+#         print(str(iteration) + ' Kolejna wartość P' + str(P))
+#
+#         if iteration//100 < 10:
+#             f_name = 'results/CRS2_00{}'.format(iteration//100)
+#         elif iteration//100 < 100:
+#             f_name = 'results/CRS2_0{}'.format(iteration//100)
+#         else:
+#             f_name = 'results/CRS2_{}'.format(iteration//100)
+#
+#         hp.plot_3d_scatter(whole_set=A,
+#                            centroid=centroid,
+#                            r_last=W,
+#                            optimum=P,
+#                            f_name=f_name,
+#                            func_number=FUNCTION_NUMBER)
+#
+# hp.plot_convergence(final_result)
 
 print(str(time.time()-start)+' s')

@@ -3,8 +3,7 @@ import random as rn
 
 upper_bound = 40
 lower_bound = -40
-N = 800
-n = 2
+n = 4
 
 
 def is_point_in_domain(p):
@@ -23,7 +22,7 @@ def function_1(x):
     return sum_x/40 + 1 - multi
 
 
-def generate_points_func_1():
+def generate_points_func_1(N):
     return [_get_point_func_1() for i in range(N)]
 
 
@@ -42,12 +41,11 @@ def function_2(x):
     return sum_x
 
 
-def generate_points_func_2():
+def generate_points_func_2(N):
     A = list()
     while len(A) != N:
         x = _get_point_func_2()
         if _func_2_condition(x):
-            print(x)
             A.append(x)
     return A
 

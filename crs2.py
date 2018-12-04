@@ -4,12 +4,6 @@ import numpy as np
 import helpers as hp
 import functions as f
 
-FUNCTION_NUMBER = 2
-
-rn.seed(1)
-N = 800
-iterations = 20000
-
 
 def get_centroid(x):
     return (np.sum(np.array(x), axis=0)/len(x)).tolist()
@@ -19,13 +13,18 @@ def get_P(centroid, R_n_plus_1):
     doubled_G = [2*x for x in centroid]
     return [doubled_G[i] - R_n_plus_1[i] for i in range(len(centroid))]
 
+FUNCTION_NUMBER = 1
 
-start = time.time()
+rn.seed(1)
+N = 800
+iterations = 20000
+
+
 
 final_result = list()
 
-A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '()')
-
+A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
+start = time.time()
 for iteration in range(iterations):
 
     i_M = np.argmax(np.array(A).T[-1])
@@ -50,24 +49,24 @@ for iteration in range(iterations):
             A[i_M] = P
             final_result.append(P[-1])
 
-    if iteration % 100 == 0:
-        print(str(iteration) + ' Kolejna wartość P' + str(P))
-
-        if iteration//100 < 10:
-            f_name = 'results/CRS2_00{}'.format(iteration//100)
-        elif iteration//100 < 100:
-            f_name = 'results/CRS2_0{}'.format(iteration//100)
-        else:
-            f_name = 'results/CRS2_{}'.format(iteration//100)
-
-        hp.plot_3d_scatter(whole_set=A,
-                           centroid=centroid,
-                           r_last=R_n_plus_1,
-                           optimum=P,
-                           f_name=f_name,
-                           func_number=FUNCTION_NUMBER)
-
-hp.plot_convergence(final_result)
+#     if iteration % 100 == 0:
+#         print(str(iteration) + ' Kolejna wartość P' + str(P))
+#
+#         if iteration//100 < 10:
+#             f_name = 'results/CRS2_00{}'.format(iteration//100)
+#         elif iteration//100 < 100:
+#             f_name = 'results/CRS2_0{}'.format(iteration//100)
+#         else:
+#             f_name = 'results/CRS2_{}'.format(iteration//100)
+#
+#         hp.plot_3d_scatter(whole_set=A,
+#                            centroid=centroid,
+#                            r_last=R_n_plus_1,
+#                            optimum=P,
+#                            f_name=f_name,
+#                            func_number=FUNCTION_NUMBER)
+#
+# hp.plot_convergence(final_result)
 
 print('M: '+str(M))
 print('L: '+str(L))
