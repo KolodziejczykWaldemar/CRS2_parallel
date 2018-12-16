@@ -22,9 +22,9 @@ iterations = 20000
 
 
 final_result = list()
-
-A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
 start = time.time()
+A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
+
 for iteration in range(iterations):
 
     i_M = np.argmax(np.array(A).T[-1])

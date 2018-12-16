@@ -24,8 +24,32 @@ def get_R(centroid, w):
     return [4*centroid[i] - 3*w[i] for i in range(len(centroid))]
 
 
-def crs3(A, return_list):
+def generate_points_func_2_parallel(N, A, lock):
 
+    while True:
+        x = f._get_point_func_2()
+        if f._func_2_condition(x):
+            with lock:
+                if len(A) < N:
+                    A.append(x)
+                else:
+                    return
+
+
+def generate_points_func_1_parallel(N, A, lock):
+
+    while True:
+        x = f._get_point_func_1()
+        with lock:
+            if len(A) < N:
+                A.append(x)
+            else:
+                return
+
+
+def crs3(A_shared):
+
+    A = A_shared[:]
     rn.seed(1)
     iterations = 20000
 
@@ -80,48 +104,32 @@ def crs3(A, return_list):
                     final_result.append(Q[-1])
                 else:
                     continue
-    #
-    #     if iteration % 100 == 0:
-    #         print(str(iteration) + ' Kolejna wartość P' + str(P))
-    #
-    #         if iteration//100 < 10:
-    #             f_name = 'results/CRS2_00{}'.format(iteration//100)
-    #         elif iteration//100 < 100:
-    #             f_name = 'results/CRS2_0{}'.format(iteration//100)
-    #         else:
-    #             f_name = 'results/CRS2_{}'.format(iteration//100)
-    #
-    #         hp.plot_3d_scatter(whole_set=A,
-    #                            centroid=centroid,
-    #                            r_last=W,
-    #                            optimum=P,
-    #                            f_name=f_name,
-    #                            func_number=FUNCTION_NUMBER)
-    #
-    # hp.plot_convergence(final_result)
 
-    return_list.append(P[-1])
+    return P[-1]
 
 
 if __name__ == '__main__':
 
     CPU_num = 4
     N = 800
-    FUNCTION_NUMBER = 1
-    A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
-    A_chunked = hp.chunk_list(A, CPU_num)
+    FUNCTION_NUMBER = 1  # tutaj trzeba zmienić numer w zależności od funkcji
+
+    manager = multiprocessing.Manager()
+    A = manager.list([])
+    lock = manager.Lock()
 
     start = time.time()
-    manager = multiprocessing.Manager()
-    return_list = manager.list()
+
     jobs = []
-    for a in A_chunked:
-        p = multiprocessing.Process(target=crs3, args=(a, return_list))
+    for a in range(CPU_num):
+        p = multiprocessing.Process(target=generate_points_func_1_parallel,
+                                    args=(N, A, lock))  # tutaj trzeba zmienić numer w zależności od funkcji
         jobs.append(p)
         p.start()
 
     for proc in jobs:
         proc.join()
 
-    print(return_list)
+    result = crs3(A)
+    print(result)
     print(time.time() - start)
