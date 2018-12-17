@@ -94,5 +94,5 @@ if __name__ == '__main__':
         proc.join()
 
     result = crs2(A)
-    print(result)
-    print(time.time() - start)
+    print('Result: {}'.format(result))
+    print('Time: {}'.format(time.time() - start))
