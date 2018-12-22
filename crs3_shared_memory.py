@@ -51,7 +51,7 @@ def crs3(A_shared):
 
     A = A_shared[:]
     rn.seed(1)
-    iterations = 20000
+    iterations = 100000
 
     final_result = list()
 
@@ -107,29 +107,34 @@ def crs3(A_shared):
 
     return P[-1]
 
+def crs3SM(CPU_num):
+	FUNCTION_NUMBER = 2 
+	N = 800
+	     # tutaj trzeba zmienić numer w zależności od funkcji
+	
+	manager = multiprocessing.Manager()
+	A = manager.list([])
+	lock = manager.Lock()
+	
+	start = time.time()
+	
+	jobs = []
+	for a in range(CPU_num):
+		p = multiprocessing.Process(target=generate_points_func_2_parallel,args=(N, A, lock))  # tutaj trzeba zmienić numer w zależności od funkcji
+	jobs.append(p)
+	p.start()
+	
+	for proc in jobs:
+		proc.join()
 
-if __name__ == '__main__':
-
-    CPU_num = 4
-    N = 800
-    FUNCTION_NUMBER = 1  # tutaj trzeba zmienić numer w zależności od funkcji
-
-    manager = multiprocessing.Manager()
-    A = manager.list([])
-    lock = manager.Lock()
-
-    start = time.time()
-
-    jobs = []
-    for a in range(CPU_num):
-        p = multiprocessing.Process(target=generate_points_func_1_parallel,
-                                    args=(N, A, lock))  # tutaj trzeba zmienić numer w zależności od funkcji
-        jobs.append(p)
-        p.start()
-
-    for proc in jobs:
-        proc.join()
-
-    result = crs3(A)
-    print('Result: {}'.format(result))
-    print('Time: {}'.format(time.time() - start))
+    
+	start2=time.time()
+	result = crs3(A)
+	plik=open("wynikiCRS3SM.txt","a")
+	plik.write('\nCPU:' + str(CPU_num) +'\n')
+	plik.write('f_num: ' + str(FUNCTION_NUMBER)+"\n")
+	plik.write('n: ' + str(f.n)+"\n")
+	plik.write('Result: {} \n'.format(result))
+	plik.write('CRS3 SM FULL Time: {} \n'.format(time.time() - start))
+	plik.write('CRS3 SM Iteration Time: {}+\n'.format(time.time() - start2))
+	plik.close()

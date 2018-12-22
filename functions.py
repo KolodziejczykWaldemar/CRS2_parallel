@@ -3,7 +3,7 @@ import random as rn
 
 upper_bound = 40
 lower_bound = -40
-n = 4
+n = 2
 
 
 def is_point_in_domain(p):
