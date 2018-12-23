@@ -15,7 +15,7 @@ def get_P(centroid, R_n_plus_1):
     return [doubled_G[i] - R_n_plus_1[i] for i in range(len(centroid))]
 
 
-def crs2(A, return_list):
+def crs2(A, return_list, function_number, vec_len):
 
     rn.seed(1)
     iterations = 20000
@@ -32,14 +32,14 @@ def crs2(A, return_list):
         A_exclude_L = A.copy()
         A_exclude_L.remove(L)
 
-        R_chosen = rn.sample(A_exclude_L, f.n)
+        R_chosen = rn.sample(A_exclude_L, vec_len)
         R_n_plus_1 = R_chosen.pop()
         centroid = get_centroid(R_chosen)
         P = get_P(centroid, R_n_plus_1)
 
         if f.is_point_in_domain(P):
 
-            P[-1] = eval('f.function_' + str(FUNCTION_NUMBER) + '(P[:-1])')
+            P[-1] = eval('f.function_' + str(function_number) + '(P[:-1])')
 
             if P[-1] < M[-1]:
                 M = P
@@ -73,25 +73,28 @@ def crs2(A, return_list):
     return_list.append(P[-1])
 
 
-if __name__ == '__main__':
+def CRS2_local(cpu_num, FUNCTION_NUMBER, vec_len):
 
-    CPU_num = 4
     N = 800
-    FUNCTION_NUMBER = 1
-    A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
-    A_chunked = hp.chunk_list(A, CPU_num)
+    start_rand = time.time()
+    A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N, vec_len)')
+    A_chunked = hp.chunk_list(A, cpu_num)
 
-    start = time.time()
+    start_iter = time.time()
     manager = multiprocessing.Manager()
     return_list = manager.list()
     jobs = []
     for a in A_chunked:
-        p = multiprocessing.Process(target=crs2, args=(a, return_list))
+        p = multiprocessing.Process(target=crs2, args=(a, return_list, FUNCTION_NUMBER, vec_len))
         jobs.append(p)
         p.start()
 
     for proc in jobs:
         proc.join()
+    end = time.time()
 
-    print(return_list)
-    print(time.time() - start)
+    iter_time = end - start_iter
+    rand_time = start_iter - start_rand
+    full_time = end - start_rand
+
+    return iter_time, rand_time, full_time, min(list(return_list))

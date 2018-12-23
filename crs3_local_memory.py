@@ -24,7 +24,7 @@ def get_R(centroid, w):
     return [4*centroid[i] - 3*w[i] for i in range(len(centroid))]
 
 
-def crs3(A, return_list):
+def crs3(A, return_list, function_number, vec_len):
 
     rn.seed(1)
     iterations = 20000
@@ -39,7 +39,7 @@ def crs3(A, return_list):
         A_exclude_W = A.copy()
         A_exclude_W.remove(W)
 
-        R_chosen = rn.sample(A_exclude_W, f.n)
+        R_chosen = rn.sample(A_exclude_W, vec_len)
 
         i_S = np.argmax(np.array(A_exclude_W).T[-1])
         S = A_exclude_W[i_S]
@@ -52,7 +52,7 @@ def crs3(A, return_list):
 
         if f.is_point_in_domain(P):
 
-            P[-1] = eval('f.function_' + str(FUNCTION_NUMBER) + '(P[:-1])')
+            P[-1] = eval('f.function_' + str(function_number) + '(P[:-1])')
 
             if P[-1] < S[-1]:
                 if not f.is_point_in_domain(R):
@@ -60,7 +60,7 @@ def crs3(A, return_list):
                     A[i_W] = P
                     final_result.append(P[-1])
                 else:
-                    R[-1] = eval('f.function_' + str(FUNCTION_NUMBER) + '(R[:-1])')
+                    R[-1] = eval('f.function_' + str(function_number) + '(R[:-1])')
                     if R[-1] < S[-1]:
                         W = R
                         A[i_W] = R
@@ -73,7 +73,7 @@ def crs3(A, return_list):
             if not f.is_point_in_domain(Q):
                 continue
             else:
-                Q[-1] = eval('f.function_' + str(FUNCTION_NUMBER) + '(Q[:-1])')
+                Q[-1] = eval('f.function_' + str(function_number) + '(Q[:-1])')
                 if Q[-1] < S[-1]:
                     W = Q
                     A[i_W] = Q
@@ -103,25 +103,28 @@ def crs3(A, return_list):
     return_list.append(final_result[-1])
 
 
-if __name__ == '__main__':
+def CRS3_local(cpu_num, FUNCTION_NUMBER, vec_len):
 
-    CPU_num = 4
     N = 800
-    FUNCTION_NUMBER = 1
-    A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N)')
-    A_chunked = hp.chunk_list(A, CPU_num)
+    start_rand = time.time()
+    A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N, vec_len)')
+    A_chunked = hp.chunk_list(A, cpu_num)
 
-    start = time.time()
+    start_iter = time.time()
     manager = multiprocessing.Manager()
     return_list = manager.list()
     jobs = []
     for a in A_chunked:
-        p = multiprocessing.Process(target=crs3, args=(a, return_list))
+        p = multiprocessing.Process(target=crs3, args=(a, return_list, FUNCTION_NUMBER, vec_len))
         jobs.append(p)
         p.start()
 
     for proc in jobs:
         proc.join()
+    end = time.time()
 
-    print(return_list)
-    print(time.time() - start)
+    iter_time = end - start_iter
+    rand_time = start_iter - start_rand
+    full_time = end - start_rand
+
+    return iter_time, rand_time, full_time, min(list(return_list))
