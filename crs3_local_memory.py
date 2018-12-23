@@ -100,7 +100,7 @@ def crs3(A, return_list):
     #
     # hp.plot_convergence(final_result)
 
-    return_list.append(P[-1])
+    return_list.append(final_result[-1])
 
 
 if __name__ == '__main__':
