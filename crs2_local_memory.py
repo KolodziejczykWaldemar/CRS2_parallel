@@ -19,10 +19,15 @@ def crs2(A, return_list, function_number, vec_len):
 
     rn.seed(1)
     iterations = 20000
-
     final_result = list()
 
-    for iteration in range(iterations):
+
+    CLOSE_ENOUGH = 10e-4
+    WANTED_RESULT = 0
+    last_P_value = 10e4
+
+    # for iteration in range(iterations):
+    while abs(last_P_value - WANTED_RESULT) > CLOSE_ENOUGH:
 
         i_M = np.argmax(np.array(A).T[-1])
         i_L = np.argmin(np.array(A).T[-1])
@@ -46,29 +51,7 @@ def crs2(A, return_list, function_number, vec_len):
                 A[i_M] = P
                 final_result.append(P[-1])
 
-    #     if iteration % 100 == 0:
-    #         print(str(iteration) + ' Kolejna wartość P' + str(P))
-    #
-    #         if iteration//100 < 10:
-    #             f_name = 'results/CRS2_00{}'.format(iteration//100)
-    #         elif iteration//100 < 100:
-    #             f_name = 'results/CRS2_0{}'.format(iteration//100)
-    #         else:
-    #             f_name = 'results/CRS2_{}'.format(iteration//100)
-    #
-    #         hp.plot_3d_scatter(whole_set=A,
-    #                            centroid=centroid,
-    #                            r_last=R_n_plus_1,
-    #                            optimum=P,
-    #                            f_name=f_name,
-    #                            func_number=FUNCTION_NUMBER)
-    #
-    # hp.plot_convergence(final_result)
-
-    # print('M: '+str(M))
-    # print('L: '+str(L))
-    # print('centroid: '+str(centroid))
-    # print('P: '+str(P))
+                last_P_value = P[-1]
 
     return_list.append(P[-1])
 

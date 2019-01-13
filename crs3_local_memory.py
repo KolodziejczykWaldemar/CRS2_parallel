@@ -31,7 +31,13 @@ def crs3(A, return_list, function_number, vec_len):
 
     final_result = list()
 
-    for iteration in range(iterations):
+    CLOSE_ENOUGH = 10e-4
+    WANTED_RESULT = 0
+    last_P_value = 10e4
+
+    while abs(last_P_value - WANTED_RESULT) > CLOSE_ENOUGH:
+
+    # for iteration in range(iterations):
 
         i_W = np.argmax(np.array(A).T[-1])
         W = A[i_W]
@@ -59,16 +65,19 @@ def crs3(A, return_list, function_number, vec_len):
                     W = P
                     A[i_W] = P
                     final_result.append(P[-1])
+                    last_P_value = P[-1]
                 else:
                     R[-1] = eval('f.function_' + str(function_number) + '(R[:-1])')
                     if R[-1] < S[-1]:
                         W = R
                         A[i_W] = R
                         final_result.append(R[-1])
+                        last_P_value = P[-1]
                     else:
                         W = P
                         A[i_W] = P
                         final_result.append(P[-1])
+                        last_P_value = P[-1]
         else:
             if not f.is_point_in_domain(Q):
                 continue
@@ -78,6 +87,7 @@ def crs3(A, return_list, function_number, vec_len):
                     W = Q
                     A[i_W] = Q
                     final_result.append(Q[-1])
+                    last_P_value = P[-1]
                 else:
                     continue
     #
