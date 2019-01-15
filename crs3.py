@@ -27,7 +27,7 @@ def CRS3(FUNCTION_NUMBER, vec_len):
     final_result = list()
     rn.seed(1)
     N = 800
-    iterations = 10000
+    iterations = 20000
     start_rand = time.time()
     A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N, vec_len)')
     start_iter = time.time()

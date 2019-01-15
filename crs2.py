@@ -19,7 +19,7 @@ def CRS2(FUNCTION_NUMBER, vec_len):
     start_rand = time.time()
     A = eval('f.generate_points_func_' + str(FUNCTION_NUMBER) + '(N, vec_len)')
     rn.seed(1)
-    iterations = 10000
+    iterations = 20000
     start_iter = time.time()
     final_result = list()
 
@@ -73,4 +73,4 @@ def CRS2(FUNCTION_NUMBER, vec_len):
 
 
 if __name__ == '__main__':
-    CRS2(1, 2)
+    CRS2(2, 2)
