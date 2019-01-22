@@ -26,8 +26,8 @@ def crs2(A, return_list, function_number, vec_len):
     WANTED_RESULT = 0
     last_P_value = 10e4
 
-    # for iteration in range(iterations):
-    while abs(last_P_value - WANTED_RESULT) > CLOSE_ENOUGH:
+    for iteration in range(iterations):
+    # while abs(last_P_value - WANTED_RESULT) > CLOSE_ENOUGH:
 
         i_M = np.argmax(np.array(A).T[-1])
         i_L = np.argmin(np.array(A).T[-1])

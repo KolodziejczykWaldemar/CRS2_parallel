@@ -35,9 +35,9 @@ def crs3(A, return_list, function_number, vec_len):
     WANTED_RESULT = 0
     last_P_value = 10e4
 
-    while abs(last_P_value - WANTED_RESULT) > CLOSE_ENOUGH:
+    # while abs(last_P_value - WANTED_RESULT) > CLOSE_ENOUGH:
 
-    # for iteration in range(iterations):
+    for iteration in range(iterations):
 
         i_W = np.argmax(np.array(A).T[-1])
         W = A[i_W]
